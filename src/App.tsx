@@ -1,13 +1,11 @@
 import "./App.css";
-import LoginPage from "./pages/LoginPage.tsx";
-import SignUpPage from "./pages/SignUpPage.tsx";
+
 
 
 function App() {
   return (
     <>
-      <LoginPage />
-      {/* <SignUpPage/> */}
+    <h1>fkselfksdlf</h1>
     </>
   );
 }
