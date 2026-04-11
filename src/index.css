@@ -13,4 +13,13 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+/* remove outline from recharts svg elements */
+.recharts-wrapper *:focus {
+  outline: none !important;
+}
+
+.recharts-surface {
+  outline: none !important;
+}
 }
