@@ -1,4 +1,3 @@
-import React from "react";
 import Food from "../../assets/Images/icon/expenseType/food.png";
 import Rent from "../../assets/Images/icon/expenseType/rent.png";
 import Grocery from "../../assets/Images/icon/expenseType/grocery.png";
@@ -241,7 +240,7 @@ const RightSide = () => {
       <div className=" flex flex-col gap-3 w-full overflow-y-auto no-scrollbar p-1">
         {data.map((e, i) => {
           return (
-            <div className="bg-[#F7F8FA] hover:bg-gray-100  cursor-pointer w-full min-h-25 rounded-lg shadow-card flex gap-2 sm:gap-6 items-center p-6">
+            <div key={i} className="bg-[#F7F8FA] hover:bg-gray-100  cursor-pointer w-full min-h-25 rounded-lg shadow-card flex gap-2 sm:gap-6 items-center p-6">
               <div className="p-2 flex items-center justify-center border border-black/10 rounded-lg">
                 <img src={categoryIcons[e.category]} alt={e.category} />
               </div>
