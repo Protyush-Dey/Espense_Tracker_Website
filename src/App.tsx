@@ -1,20 +1,32 @@
-// import { Route, Routes } from "react-router";
-// import LoginPage from "./Pages/LoginPage";
-// import SignupPage from "./Pages/SignupPage";
-import Workspace from "./Pages/Workspace";
+import { Route, Routes } from "react-router";
+import LoginPage from "./Pages/AuthPages/LoginPage.tsx";
+import SignupPage from "./Pages/AuthPages/SignupPage.tsx";
+import AuthPge from "./Pages/AuthPge.tsx";
+import { useState } from "react";
+ import Workspace from "./Pages/Workspace";
+import { DashBoard } from "./Pages/WorkspaceSubPages/DashBoard.tsx";
 
 
 
 function App() {
+  const [islogin,setLogin] = useState<boolean>(true);
   return (
     <>
     {/* <LoginPage/> */}
     {/* <SignupPage/> */}
-    <Workspace/>
-    {/* <Routes>
+    {/* <Workspace/> */}
+    <Routes>
+      {islogin?
+      <Route path="/" element={<AuthPge/>}>
       <Route path="/" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
-    </Routes> */}
+      </Route>:
+      <Route path="/" element={<Workspace/>}>
+      <Route path="/" element={<DashBoard/>} />
+      {/* <Route path="/signup" element={<SignupPage />} /> */}
+      </Route>
+      }
+    </Routes>
     </>
   );
 }

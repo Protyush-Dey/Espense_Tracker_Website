@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useFormik } from "formik";
-import authPageImage from "../assets/Images/authPageImage.png";
-import authPageLogo from "../assets/Images/icon/logo.png"
-import hideEye from "../assets/Images/icon/hide.png";
-import showEye from "../assets/Images/icon/show.png";
+import authPageImage from "../../assets/Images/authPageImage.png";
+import authPageLogo from "../../assets/Images/icon/logo.png"
+import hideEye from "../../assets/Images/icon/hide.png";
+import showEye from "../../assets/Images/icon/show.png";
 import {useNavigate } from "react-router";
 
 const SignupPage = () => {
