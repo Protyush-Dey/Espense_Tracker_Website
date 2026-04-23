@@ -5,8 +5,25 @@ import authPageLogo from "../../assets/Images/icon/logo.png";
 import hideEye from "../../assets/Images/icon/hide.png";
 import showEye from "../../assets/Images/icon/show.png";
 import { useNavigate } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import type { LoginPayload } from "../../types/authType";
+import { login } from "../../api/auth.api";
+import type { HTTPError } from "ky";
+
 
 const LoginPage = () => {
+  const loginMutation = useMutation({
+    mutationFn: (value:LoginPayload)=>login(value),
+    onSuccess:(data)=>{
+      console.log(data);
+      // do remain job
+    },
+    onError: async (error: HTTPError) => {
+    const errorData = await error.response.json();
+    console.log("Login failed:", errorData); // ✅ "All fields are required"
+  }
+  });
+
   const [isPassword, setIsPassword] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -16,7 +33,8 @@ const LoginPage = () => {
       password: "",
     },
     onSubmit: (values, { resetForm }) => {
-      alert(JSON.stringify(values, null, 2));
+      // alert(JSON.stringify(values, null, 2));
+      loginMutation.mutate(values);
       resetForm();
     },
   });
@@ -41,9 +59,7 @@ const LoginPage = () => {
           </div>
 
           <div className="w-full flex flex-col gap-3 sm:gap-6">
-            <h1 className="text-lg sm:text-2xl font-medium">
-              Welcom back
-            </h1>
+            <h1 className="text-lg sm:text-2xl font-medium">Welcom back</h1>
 
             <form
               onSubmit={formik.handleSubmit}
@@ -114,7 +130,10 @@ const LoginPage = () => {
 
               <p className="text-sm text-center">
                 Don't have an account?{" "}
-                <span className="text-blue-600 cursor-pointer hover:text-blue-700" onClick={() => navigate("/signup")}>
+                <span
+                  className="text-blue-600 cursor-pointer hover:text-blue-700"
+                  onClick={() => navigate("/signup")}
+                >
                   Sign up
                 </span>
               </p>
