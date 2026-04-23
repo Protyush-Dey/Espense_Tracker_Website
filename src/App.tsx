@@ -23,7 +23,6 @@ function App() {
       </Route>:
       <Route path="/" element={<Workspace/>}>
       <Route path="/" element={<DashBoard/>} />
-      {/* <Route path="/signup" element={<SignupPage />} /> */}
       </Route>
       }
     </Routes>

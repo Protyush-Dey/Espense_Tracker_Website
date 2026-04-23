@@ -2,8 +2,6 @@ import { DatePicker, type DatePickerProps } from "antd";
 import Calender from "../../assets/Images/icon/Calender.png"
 
 const Filter = () => {
-
-
   const onChange: DatePickerProps["onChange"] = (date, dateString) => {
     console.log(date, dateString);
   };
