@@ -217,7 +217,7 @@ const SignupPage = () => {
                 Sign up
               </button>
 
-              <p className="text-lg font-semibold text-center">
+              <p className="text-[14px] md:text-lg font-semibold text-center">
                 Already have an account?{" "}
                 <span
                   className={`${statusCode == 409 ? "text-red-600" : "text-blue-600"} cursor-pointer hover:${statusCode == 404 ? "text-red-700" : "text-blue-700"}`}

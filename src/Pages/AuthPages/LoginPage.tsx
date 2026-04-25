@@ -5,7 +5,7 @@ import authPageLogo from "../../assets/Images/icon/logo.png";
 import hideEye from "../../assets/Images/icon/hide.png";
 import showEye from "../../assets/Images/icon/show.png";
 import { useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { LoginPayload } from "../../types/authType";
 import { login } from "../../api/auth.api";
 import type { HTTPError } from "ky";
@@ -14,12 +14,14 @@ const LoginPage = () => {
   const [isPassword, setIsPassword] = useState<boolean>(true);
   const [statusCode, setStatusCode] = useState<number>(200);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
 
   const loginMutation = useMutation({
     mutationFn: (value: LoginPayload) => login(value),
     onSuccess: (data) => {
       console.log(data);
-      // do remain job
+      queryClient.invalidateQueries({ queryKey: ["me"] });
     },
     onError: async (error: HTTPError) => {
       const status = await error.response.status;
@@ -171,7 +173,7 @@ const LoginPage = () => {
                 Log in
               </button>
 
-              <p className="text-lg font-semibold text-center">
+              <p className="text-[14px] md:text-lg font-semibold text-center">
                 Don't have an account?{" "}
                 <span
                   className={`${statusCode == 404 ? "text-red-600" : "text-blue-600"} cursor-pointer hover:${statusCode == 404 ? "text-red-700" : "text-blue-700"}`}
