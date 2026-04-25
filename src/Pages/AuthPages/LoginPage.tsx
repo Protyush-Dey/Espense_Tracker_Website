@@ -67,7 +67,7 @@ const LoginPage = () => {
 
   return (
     <div className="sm:flex justify-center items-center min-h-screen bg-white sm:bg-gray-200">
-      <div className="flex flex-col sm:flex-row card max-w-4xl min-w-[320px] w-full sm:w-2xl lg:w-3xl sm:rounded-xl overflow-hidden sm:dow-authCard sm:bg-gray-100 h-full sm:h-fit">
+      <div className="flex flex-col sm:flex-row card max-w-4xl min-w-[320px] w-full sm:w-2xl lg:w-3xl sm:rounded-xl overflow-hidden sm:shadow-authCard sm:bg-gray-100 h-full sm:h-fit">
         <img
           src={authPageImage}
           alt="image"
