@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useRef} from "react";
 import AccountCard from "./AccountCard";
 import leftIcon from "../../assets/Images/icon/horizontalScBtn.png";
 import { useQuery } from "@tanstack/react-query";
