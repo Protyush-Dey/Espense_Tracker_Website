@@ -9,3 +9,15 @@ export interface SignUpPayload {
     email: string,
     password: string,
 }
+
+export interface User {
+    id:string,
+    userName: string,
+    fullName: string,
+    email: string,
+}
+
+export interface UserContextType {
+  user: User | null;
+  setUser: (user: User | null) => void;
+}

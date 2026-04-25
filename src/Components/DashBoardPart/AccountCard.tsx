@@ -1,10 +1,11 @@
 import cashAaccountImage from "../../assets/Images/icon/accountType/cashAccount.png";
 import primaryAaccountImage from "../../assets/Images/icon/accountType/primaryAccount.png";
 import normalAaccountImage from "../../assets/Images/icon/accountType/normalAccount.png";
+import type { AllAccount } from "../../types/userDataType";
 
-const AccountCard = ({ accountDetail }: AccountCardProps) => {
-  const accountType: string = accountDetail.accountType;
-  const accountName: string = accountDetail.accountName;
+const AccountCard = ({ accountDetail }: AccountCardProps ) => {
+  const type: string = accountDetail.type;
+  const account: string = accountDetail.account;
   const balance: number = accountDetail.balance;
 
   return (
@@ -12,18 +13,18 @@ const AccountCard = ({ accountDetail }: AccountCardProps) => {
       <div className="flex justify-between  items-center">
         <img
           src={
-            accountType === "cash"
+            type === "cash"
               ? cashAaccountImage
-              : accountType === "primary"
+              : type === "primary"
                 ? primaryAaccountImage
                 : normalAaccountImage
           }
           alt="account"
           className="xl:w-5 xl:h-5  min-w-3 min-h-3"
         />
-        <p className="xl:text-lg text-[16px] font-medium">{accountType.replace(/^./, (match) => match.toUpperCase())}{" "}Account</p>
+        <p className="xl:text-lg text-[16px] font-medium">{type.replace(/^./, (match) => match.toUpperCase())}{" "}Account</p>
       </div>
-      <h2 className="xl:text-lg text-[16px]">{accountType=="cash"?"Cash in hand" :`******${accountName}`}</h2>
+      <h2 className="xl:text-lg text-[16px]">{type=="cash"?"Cash in hand" :`******${account}`}</h2>
       <h1 className="xl:text-2xl text-xl font-bold">₹<span>{balance.toLocaleString("en-IN")}</span></h1>
     </div>
   );
@@ -31,12 +32,13 @@ const AccountCard = ({ accountDetail }: AccountCardProps) => {
 
 export default AccountCard;
 
-type Account = {
-  accountType: "cash" | "primary" | "normal";
-  accountName: string;
-  balance: number;
-};
+// type Account = {
+//   id:string
+//  type: "cash" | "primary" | "normal";
+//   account: string;
+//   balance: number;
+// };
 
 type AccountCardProps = {
-  accountDetail: Account;
+  accountDetail: AllAccount;
 };

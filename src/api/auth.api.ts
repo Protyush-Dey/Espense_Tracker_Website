@@ -1,6 +1,7 @@
 import api from "./api.ts";
 
-import type { LoginPayload, SignUpPayload } from "../types/authType.ts";
+import type { LoginPayload, SignUpPayload, User } from "../types/authType.ts";
+import type { ApiType } from "../types/api.ts";
 
 // login 
 export const login = (Data:LoginPayload) =>{
@@ -29,5 +30,5 @@ export const setPassword = (Data:{password:string}) =>{
 
 //
 export const me = () =>{
-    return api.get("expTrack/user/me" ).json();
+    return api.get("expTrack/user/me" ).json<ApiType<User>>();
 }

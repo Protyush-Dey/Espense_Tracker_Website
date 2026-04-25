@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router'
 import NavBar from '../Components/NavBar'
-import Expense from './WorkspaceSubPages/Expense'
+// import Expense from './WorkspaceSubPages/Expense'
 // import { DashBoard } from './WorkspaceSubPages/DashBoard'
 
 const Workspace = () => {

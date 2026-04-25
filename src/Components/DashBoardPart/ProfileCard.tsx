@@ -1,10 +1,7 @@
-type User = {
-  email: string;
-  fullName: string;
-  userName: string;
-};
+import { useUser } from "../../context/user";
 
 const ProfileCard = () => {
+  const {user} = useUser();
   const getColorFromString = (str: string) => {
     let hash = 0;
 
@@ -35,24 +32,18 @@ const ProfileCard = () => {
     return brightness > 150 ? "#000" : "#fff";
   };
 
-  const user: User = {
-    email: "mdey7054@gamil.com",
-    fullName: "Protyush Dey",
-    userName: "Protyush20",
-  };
-
-  const bgColor = getColorFromString(user.userName);
+  const bgColor = getColorFromString(user?.userName || "");
   const textColor = getTextColor(bgColor);
 
   return (
     <div className="min-w-60 w-full sm:w-2/7 h-full rounded-lg shadow-card flex sm:flex-col justify-between sm:justify-center items-center gap-3 p-2 px-4" >
       <div className="shadow-card rounded-full w-16 aspect-square flex items-center justify-center text-3xl font-medium" style={{ backgroundColor: bgColor, color: textColor }} >
-        <p>{user.fullName.charAt(0).toLocaleUpperCase()}</p>
+        <p>{user?.fullName.charAt(0).toLocaleUpperCase()}</p>
       </div>
       <div className="flex flex-col gap-1 justify-center sm:items-center font-medium text-[16px] ">
-        <h2>{user.fullName}</h2>
-        <h2 className="text-gray-500">{user.email}</h2>
-        <h2>{user.userName}</h2>
+        <h2>{user?.fullName}</h2>
+        <h2 className="text-gray-500">{user?.email}</h2>
+        <h2>{user?.userName}</h2>
       </div>
     </div>
   );

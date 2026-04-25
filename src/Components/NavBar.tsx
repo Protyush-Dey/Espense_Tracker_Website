@@ -3,8 +3,10 @@ import logout from "../assets/Images/icon/logout.png";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useState } from "react";
+import { useUser } from "../context/user";
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const {user} = useUser();
   return (
     <>
       <nav className=" fixed top-0 left-0 w-full z-50 min-h-20 bg-[#F7F8FA] shadow-[0_2px_4px_1px_rgba(0,0,0,0.1)] hidden md:flex justify-between items-center px-6 lg:px-8 ">
@@ -26,7 +28,7 @@ const NavBar = () => {
         </div>
         <div className="flex items-center justify-center xl:gap-10 lg:gap-7 gap-4 xl:text-2xl text-xl">
           <p>
-            Welcome, <span className="font-medium">Protyush Dey</span>
+            Welcome, <span className="font-medium">{user?.fullName}</span>
           </p>
           <button className="flex items-center justify-center gap-2 h-8 rounded-lg cursor-pointer shadow-button bg-[#F1F5F9] hover:bg-[#eceef1] p-2 lg:px-4 text-[10px] lg:text-lg">
             <img src={logout} alt="icon" className="lg:h-4 h-3 " />

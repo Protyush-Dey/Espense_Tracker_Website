@@ -8,30 +8,33 @@ import { DashBoard } from "./Pages/WorkspaceSubPages/DashBoard.tsx";
 import PasswordChange from "./Pages/AuthPages/PasswordChange.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { me } from "./api/auth.api.ts";
+import { useEffect } from "react";
+import { useUser } from "./context/user.tsx";
+import type { ApiType } from "./types/api.ts";
+import type { User } from "./types/authType.ts";
 
 
 
 function App() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<ApiType<User>>({
     queryKey: ["me"],
     queryFn: me,
     retry: false,          
     refetchOnWindowFocus: false,
   });
-
-  if (isLoading) return <div>Loading...</div>; // or a spinner
-
-  const isLoggedIn = !data;
-  console.log(data);
+  const { setUser ,user } = useUser();
+  useEffect(() => {
+     if (data) setUser(data.data);
+  }, [data]);
   
-  // const [islogin,setLogin] = useState<boolean>(!false);
+  if (isLoading) return <div>Loading...</div>;
   return (
     <>
     {/* <LoginPage/> */}
     {/* <SignupPage/> */}
     {/* <Workspace/> */}
     <Routes>
-      {isLoggedIn ?
+      {!user ?
       <Route path="/" element={<AuthPge/>}>
       <Route path="/" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
