@@ -5,6 +5,7 @@ import AuthPge from "./Pages/AuthPge.tsx";
 import { useState } from "react";
  import Workspace from "./Pages/Workspace";
 import { DashBoard } from "./Pages/WorkspaceSubPages/DashBoard.tsx";
+import PasswordChange from "./Pages/AuthPages/PasswordChange.tsx";
 
 
 
@@ -20,6 +21,8 @@ function App() {
       <Route path="/" element={<AuthPge/>}>
       <Route path="/" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/forgetPass" element={<PasswordChange/>} />
+
       </Route>:
       <Route path="/" element={<Workspace/>}>
       <Route path="/" element={<DashBoard/>} />

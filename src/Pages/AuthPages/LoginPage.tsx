@@ -10,28 +10,54 @@ import type { LoginPayload } from "../../types/authType";
 import { login } from "../../api/auth.api";
 import type { HTTPError } from "ky";
 
-
 const LoginPage = () => {
+  const [isPassword, setIsPassword] = useState<boolean>(true);
+  const [statusCode, setStatusCode] = useState<number>(200);
+  const navigate = useNavigate();
+
   const loginMutation = useMutation({
-    mutationFn: (value:LoginPayload)=>login(value),
-    onSuccess:(data)=>{
+    mutationFn: (value: LoginPayload) => login(value),
+    onSuccess: (data) => {
       console.log(data);
       // do remain job
     },
     onError: async (error: HTTPError) => {
-    const errorData = await error.response.json();
-    console.log("Login failed:", errorData); // ✅ "All fields are required"
-  }
+      const status = await error.response.status;
+      const errorData = await error.response.json();
+      setStatusCode(status);
+      console.log("Login failed:", errorData);
+      console.log(statusCode);
+    },
   });
-
-  const [isPassword, setIsPassword] = useState<boolean>(true);
-  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
       loginInfo: "",
       password: "",
     },
+    validate: (values) => {
+      const errors: { loginInfo?: string; password?: string } = {};
+
+      // Empty check
+      if (!values.loginInfo.trim()) {
+        errors.loginInfo = "Email or Username is required";
+      }
+
+      if (!values.password) {
+        errors.password = "Password is required";
+      } else if (values.password.length < 8) {
+        errors.password = "Password must be at least 8 characters";
+      } else if (!/[A-Z]/.test(values.password)) {
+        errors.password = "Password must contain at least 1 uppercase letter";
+      } else if (!/[0-9]/.test(values.password)) {
+        errors.password = "Password must contain at least 1 number";
+      } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(values.password)) {
+        errors.password = "Password must contain at least 1 special character";
+      }
+
+      return errors;
+    },
+
     onSubmit: (values, { resetForm }) => {
       // alert(JSON.stringify(values, null, 2));
       loginMutation.mutate(values);
@@ -65,7 +91,7 @@ const LoginPage = () => {
               onSubmit={formik.handleSubmit}
               className="flex flex-col gap-3 sm:gap-4"
             >
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col ">
                 <label
                   htmlFor="LoginInfo"
                   className="font-medium text-sm sm:text-md"
@@ -78,11 +104,17 @@ const LoginPage = () => {
                   name="loginInfo"
                   value={formik.values.loginInfo}
                   onChange={formik.handleChange}
-                  className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4"
+                  onBlur={formik.handleBlur}
+                  className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4 mt-4"
                 />
+                {formik.touched.loginInfo && formik.errors.loginInfo && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formik.errors.loginInfo}
+                  </p>
+                )}
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <div className="flex justify-between">
                   <label
                     htmlFor="password"
@@ -91,7 +123,7 @@ const LoginPage = () => {
                     Password
                   </label>
 
-                  <span className="text-blue-600 cursor-pointer hover:text-blue-700 text-sm">
+                  <span className="text-blue-600 cursor-pointer hover:text-blue-700 text-sm" onClick={() => navigate("/forgetPass")}>
                     Forgot Password?
                   </span>
                 </div>
@@ -104,13 +136,13 @@ const LoginPage = () => {
                     name="password"
                     value={formik.values.password}
                     onChange={formik.handleChange}
-                    className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4 w-full pr-10"
+                    onBlur={formik.handleBlur}
+                    className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4 w-full pr-10 mt-4"
                   />
-
                   <button
                     type="button"
                     onClick={() => setIsPassword((prev) => !prev)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-8.75 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
                   >
                     {isPassword ? (
                       <img src={hideEye} alt="show" />
@@ -119,19 +151,30 @@ const LoginPage = () => {
                     )}
                   </button>
                 </div>
+                {formik.touched.password && formik.errors.password && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formik.errors.password}
+                  </p>
+                )}
               </div>
+              {statusCode == 401 ? (
+                <p className=" text-center text-red-500 font-semibold">
+                  {" "}
+                  Incorrect password
+                </p>
+              ) : null}
 
               <button
                 type="submit"
-                className="bg-blue-500 h-7 sm:h-10 w-full hover:bg-blue-600 rounded-md text-sm text-white"
+                className="bg-blue-500 h-7 sm:h-10 w-full hover:bg-blue-600 rounded-md text-sm text-white cursor-pointer"
               >
                 Log in
               </button>
 
-              <p className="text-sm text-center">
+              <p className="text-lg font-semibold text-center">
                 Don't have an account?{" "}
                 <span
-                  className="text-blue-600 cursor-pointer hover:text-blue-700"
+                  className={`${statusCode == 404 ? "text-red-600" : "text-blue-600"} cursor-pointer hover:${statusCode == 404 ? "text-red-700" : "text-blue-700"}`}
                   onClick={() => navigate("/signup")}
                 >
                   Sign up

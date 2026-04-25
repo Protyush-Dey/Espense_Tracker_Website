@@ -1,14 +1,35 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import authPageImage from "../../assets/Images/authPageImage.png";
-import authPageLogo from "../../assets/Images/icon/logo.png"
+import authPageLogo from "../../assets/Images/icon/logo.png";
 import hideEye from "../../assets/Images/icon/hide.png";
 import showEye from "../../assets/Images/icon/show.png";
-import {useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import type { SignUpPayload } from "../../types/authType";
+import { signup } from "../../api/auth.api";
+import type { HTTPError } from "ky";
 
 const SignupPage = () => {
   const [isPassword, setIsPassword] = useState<boolean>(true);
-      const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [statusCode, setStatusCode] = useState<number>(200);
+
+  const signUpMutation = useMutation({
+    mutationFn: (value: SignUpPayload) => signup(value),
+    onSuccess: (data) => {
+      console.log(data);
+      navigate("/");
+    },
+    onError: async (error: HTTPError) => {
+      const status = await error.response.status;
+      const errorData = await error.response.json();
+      setStatusCode(status);
+      console.log("Login failed:", errorData);
+      console.log(statusCode);
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -16,9 +37,41 @@ const SignupPage = () => {
       email: "",
       password: "",
     },
+    validate: (values) => {
+      const errors: {
+        fullName?: string;
+        userName?: string;
+        email?: string;
+        password?: string;
+      } = {};
+
+      // Empty check
+      if (!values.fullName.trim()) {
+        errors.fullName = "Fullname is required";
+      }
+      if (!values.email.trim()) {
+        errors.email = "email is required";
+      }
+      if (!values.userName.trim()) {
+        errors.userName = "UserName is required";
+      }
+      if (!values.password) {
+        errors.password = "Password is required";
+      } else if (values.password.length < 8) {
+        errors.password = "Password must be at least 8 characters";
+      } else if (!/[A-Z]/.test(values.password)) {
+        errors.password = "Password must contain at least 1 uppercase letter";
+      } else if (!/[0-9]/.test(values.password)) {
+        errors.password = "Password must contain at least 1 number";
+      } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(values.password)) {
+        errors.password = "Password must contain at least 1 special character";
+      }
+
+      return errors;
+    },
     onSubmit: (values, { resetForm }) => {
-      alert(JSON.stringify(values, null, 2));
-      
+      // alert(JSON.stringify(values, null, 2));
+      signUpMutation.mutate(values);
       resetForm();
     },
   });
@@ -50,7 +103,7 @@ const SignupPage = () => {
               onSubmit={formik.handleSubmit}
               className="flex flex-col gap-3 sm:gap-2"
             >
-                <div className="flex flex-col gap-2">
+              <div className="flex flex-col ">
                 <label
                   htmlFor="fullName"
                   className="font-medium text-sm sm:text-md"
@@ -63,15 +116,21 @@ const SignupPage = () => {
                   name="fullName"
                   value={formik.values.fullName}
                   onChange={formik.handleChange}
-                  className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4"
+                  className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4 mt-2"
+                  onBlur={formik.handleBlur}
                 />
+                {formik.touched.fullName && formik.errors.fullName && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formik.errors.fullName}
+                  </p>
+                )}
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col ">
                 <label
                   htmlFor="userName"
                   className="font-medium text-sm sm:text-md"
                 >
-                 Username
+                  Username
                 </label>
 
                 <input
@@ -79,10 +138,16 @@ const SignupPage = () => {
                   name="userName"
                   value={formik.values.userName}
                   onChange={formik.handleChange}
-                  className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4"
+                  className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4 mt-2"
+                  onBlur={formik.handleBlur}
                 />
+                {formik.touched.userName && formik.errors.userName && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formik.errors.userName}
+                  </p>
+                )}
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col ">
                 <label
                   htmlFor="email"
                   className="font-medium text-sm sm:text-md"
@@ -95,12 +160,17 @@ const SignupPage = () => {
                   name="email"
                   value={formik.values.email}
                   onChange={formik.handleChange}
-                  className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4"
+                  className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4 mt-4"
+                  onBlur={formik.handleBlur}
                 />
+                {formik.touched.email && formik.errors.email && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formik.errors.email}
+                  </p>
+                )}
               </div>
 
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between">
+              <div className="flex flex-col">
                   <label
                     htmlFor="password"
                     className="font-medium text-sm sm:text-md"
@@ -108,12 +178,8 @@ const SignupPage = () => {
                     Password
                   </label>
 
-                  <span className="text-blue-600 cursor-pointer hover:text-blue-700 text-sm">
-                    Forgot Password?
-                  </span>
-                </div>
 
-                <div className="relative">
+                <div className="relative ">
                   <input
                     id="password"
                     autoComplete="email"
@@ -121,13 +187,14 @@ const SignupPage = () => {
                     name="password"
                     value={formik.values.password}
                     onChange={formik.handleChange}
-                    className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4 w-full pr-10"
+                    className="outline-0 border border-gray-300 h-7 sm:h-10 text-sm rounded-lg p-4 w-full pr-10 mt-4"
+                    onBlur={formik.handleBlur}
                   />
 
                   <button
                     type="button"
                     onClick={() => setIsPassword((prev) => !prev)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-8.75 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
                   >
                     {isPassword ? (
                       <img src={hideEye} alt="show" />
@@ -136,6 +203,11 @@ const SignupPage = () => {
                     )}
                   </button>
                 </div>
+                {formik.touched.password && formik.errors.password && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {formik.errors.password}
+                  </p>
+                )}
               </div>
 
               <button
@@ -145,9 +217,12 @@ const SignupPage = () => {
                 Sign up
               </button>
 
-              <p className="text-sm text-center">
+              <p className="text-lg font-semibold text-center">
                 Already have an account?{" "}
-                <span className="text-blue-600 cursor-pointer hover:text-blue-700" onClick={() => navigate("/")}> 
+                <span
+                  className={`${statusCode == 409 ? "text-red-600" : "text-blue-600"} cursor-pointer hover:${statusCode == 404 ? "text-red-700" : "text-blue-700"}`}
+                  onClick={() => navigate("/")}
+                >
                   Log in
                 </span>
               </p>
@@ -157,6 +232,6 @@ const SignupPage = () => {
       </div>
     </div>
   );
-}
+};
 
-export default SignupPage
+export default SignupPage;
