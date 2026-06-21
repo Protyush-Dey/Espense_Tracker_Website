@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell } from "recharts";
 type DataType = {
   value: number;
   fill: string;
-  
+  category :string;
 };
 
 type PiGraphProps = {
