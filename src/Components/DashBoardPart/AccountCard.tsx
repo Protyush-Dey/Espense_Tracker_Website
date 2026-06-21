@@ -5,7 +5,7 @@ import type { AllAccount } from "../../types/userDataType";
 
 const AccountCard = ({ accountDetail }: AccountCardProps ) => {
   const type: string = accountDetail.type;
-  const account: string = accountDetail.account;
+  const account: string = accountDetail.account_name;
   const balance: number = accountDetail.balance;
 
   return (
@@ -31,13 +31,6 @@ const AccountCard = ({ accountDetail }: AccountCardProps ) => {
 };
 
 export default AccountCard;
-
-// type Account = {
-//   id:string
-//  type: "cash" | "primary" | "normal";
-//   account: string;
-//   balance: number;
-// };
 
 type AccountCardProps = {
   accountDetail: AllAccount;

@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef,} from "react";
 import AccountCard from "./AccountCard";
 import leftIcon from "../../assets/Images/icon/horizontalScBtn.png";
-import { useQuery } from "@tanstack/react-query";
-import { getAllAccount } from "../../api/userData.api";
 import type { AllAccount } from "../../types/userDataType";
-import type { ApiType } from "../../types/api.ts";
+// import type { ApiType } from "../../types/api.ts";
+import { useAccount } from "../../context/account.tsx";
 const AccountList = () => {
   // const [canScroll, setCanScroll] = useState<boolean>(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -32,32 +31,9 @@ const AccountList = () => {
     scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" });
   };
 
-  const {data} = useQuery<ApiType<AllAccount[]>>({
-    queryKey: ["getAllAccount"],
-    queryFn: getAllAccount,
-    retry: false,          
-    refetchOnWindowFocus: false,
-  })
 
-  // const accounts: Account[] = [
-  //   {
-  //     type: "cash",
-  //     account: "Cash",
-  //     balance: 2500,
-  //   },
-  //   {
-  //     type: "primary",
-  //     account: "1234",
-  //     balance: 12000,
-  //   },
-  //   {
-  //     type: "normal",
-  //     account: "5678",
-  //     balance: 5400,
-  //   },
-  // ];
-  // console.log(data);
-  
+  const { accounts} = useAccount();
+
   return (
     <div className="w-full h-2/9 flex gap-3 overflow-hidden ">
       <button
@@ -71,7 +47,7 @@ const AccountList = () => {
         className="flex-1 min-w-0 h-full flex gap-8 overflow-x-auto no-scrollbar"
         ref={scrollRef}
       >
-        {data?.data.map((e:AllAccount, index:number) => {
+        {accounts.map((e: AllAccount, index: number) => {
           return <AccountCard key={index} accountDetail={e} />;
         })}
       </div>
@@ -79,11 +55,14 @@ const AccountList = () => {
         onClick={scrollRight}
         // className={`transition ${!canScroll ? "hidden" : ""} `}
       >
-        <img src={leftIcon} alt="left" className="xl:w-12 xl:h-12 w-8 h-8 rotate-180" />
+        <img
+          src={leftIcon}
+          alt="left"
+          className="xl:w-12 xl:h-12 w-8 h-8 rotate-180"
+        />
       </button>
     </div>
   );
 };
 
 export default AccountList;
-

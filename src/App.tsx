@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router";
+import {  Route, Routes } from "react-router";
 import LoginPage from "./Pages/AuthPages/LoginPage.tsx";
 import SignupPage from "./Pages/AuthPages/SignupPage.tsx";
 import AuthPge from "./Pages/AuthPge.tsx";
@@ -12,21 +12,42 @@ import { useEffect } from "react";
 import { useUser } from "./context/user.tsx";
 import type { ApiType } from "./types/api.ts";
 import type { User } from "./types/authType.ts";
+import Expense from "./Pages/WorkspaceSubPages/Expense.tsx";
+import Friends from "./Pages/Friends.tsx";
+import type { AllAccount } from "./types/userDataType.ts";
+import { getAllAccount } from "./api/userData.api.ts";
+import { useAccount } from "./context/account.tsx";
 
 
 
 function App() {
-  const { data, isLoading } = useQuery<ApiType<User>>({
+  const { data: userData } = useQuery<ApiType<User>>({
     queryKey: ["me"],
     queryFn: me,
-    retry: false,          
+    retry: false,
     refetchOnWindowFocus: false,
   });
-  const { setUser ,user } = useUser();
+  const { setUser, user } = useUser();
   useEffect(() => {
-     if (data) setUser(data.data);
-  }, [data]);
-  
+    if (userData) {
+      setUser(userData.data)
+    }
+  }, [userData]);
+
+  const { data: accountData ,isLoading} = useQuery<ApiType<AllAccount[]>>({
+    queryKey: ["getAllAccount"],
+    queryFn: getAllAccount,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  const { setAccount } = useAccount();
+  useEffect(() => {
+    if (accountData) {
+      setAccount(accountData.data);
+    }
+  })
+
+
   if (isLoading) return <div>Loading...</div>;
   return (
     <>
@@ -41,9 +62,11 @@ function App() {
       <Route path="/forgetPass" element={<PasswordChange/>} />
 
       </Route>:
-      <Route path="/" element={<Workspace/>}>
-      <Route path="/" element={<DashBoard/>} />
-      </Route>
+     <Route path="/" element={<Workspace />}>
+    <Route index element={<DashBoard />} />
+    <Route path="expense" element={<Expense />} />
+    <Route path="/friends" element={<Friends/>}/>
+</Route>
       }
     </Routes>
     </>
