@@ -10,7 +10,7 @@ export const login = (Data:LoginPayload) =>{
 
 // signup
 export const signup = (Data:SignUpPayload) =>{
-    return api.post("expTrack/user/ragister" , {json:Data}).json();
+    return api.post("expTrack/user/register" , {json:Data}).json();
 }
 
 // email send for otp in forget password
