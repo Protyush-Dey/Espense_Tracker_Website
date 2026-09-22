@@ -129,7 +129,7 @@ const ChevronRight = () => (
 const PAGE_SIZE = 20;
 
 // Hardcoded user id — swap to your auth context as needed
-const CURRENT_USER_ID = "user-abc-123";
+// const CURRENT_USER_ID = "user-abc-123";
 
 let nextId = INITIAL_EXPENSES.length + 1;
 
