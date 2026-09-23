@@ -1,11 +1,11 @@
-import ky from "ky";
+import axios from "axios";
 
-const api = ky.create({
-    prefixUrl : import.meta.env.VITE_SERVER_URL,
-    credentials :"include",
-    headers:{
-        "Content-Type" : "application/json",
-    },
+const api = axios.create({
+  baseURL: import.meta.env.VITE_SERVER_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export default api;

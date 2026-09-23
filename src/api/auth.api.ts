@@ -4,35 +4,43 @@ import type { LoginPayload, SignUpPayload, User } from "../types/authType.ts";
 import type { ApiType } from "../types/api.ts";
 
 // login 
-export const login = (Data:LoginPayload) =>{
-    return api.post("expTrack/user/logIn" , {json:Data}).json();
-}
+export const login = async (Data: LoginPayload) => {
+    const response = await api.post<ApiType<any>>("/expTrack/user/logIn", Data);
+    return response.data;
+};
 
 // signup
-export const signup = (Data:SignUpPayload) =>{
-    return api.post("expTrack/user/ragister" , {json:Data}).json();
-}
+export const signup = async (Data: SignUpPayload) => {
+    const response = await api.post<ApiType<any>>("/expTrack/user/ragister", Data);
+    return response.data;
+};
 
 // email send for otp in forget password
-export const sendEmail = (Data:{email: string}) =>{
-    return api.post("expTrack/user/forgotPassword" , {json:Data}).json();
-}
+export const sendEmail = async (Data: { email: string }) => {
+    const response = await api.post<ApiType<{ otp: number }>>("/expTrack/user/forgotPassword", Data);
+    return response.data;
+};
 
-//me
-export const me = () =>{
-    return api.get("expTrack/user/me" ).json<ApiType<User>>();
-}
+// me
+export const me = async () => {
+    const response = await api.get<ApiType<User>>("/expTrack/user/me");
+    return response.data;
+};
 
-//logout
-export const logout = () =>{
-    return api.post("expTrack/user/logout" ).json<ApiType<User>>();
-}
+// logout
+export const logout = async () => {
+    const response = await api.post<ApiType<User>>("/expTrack/user/logout");
+    return response.data;
+};
+
 // otp verify
-export const otpVerify = (Data:{ email:string, otp: number }) =>{
-    return api.post("expTrack/user/verifyPasswordChangeOtp" , {json:Data}).json();
-}
+export const otpVerify = async (Data: { email: string; otp: number }) => {
+    const response = await api.post<ApiType<any>>("/expTrack/user/verifyPasswordChangeOtp", Data);
+    return response.data;
+};
 
 // set new password
-export const setPassword = (Data:{password:string}) =>{
-    return api.post("expTrack/user/updatePassword" , {json:Data}).json();
-}
+export const setPassword = async (Data: { password: string }) => {
+    const response = await api.post<ApiType<any>>("/expTrack/user/updatePassword", Data);
+    return response.data;
+};

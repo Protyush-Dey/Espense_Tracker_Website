@@ -6,7 +6,7 @@ import showEye from "../../assets/Images/icon/show.png";
 import { useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { otpVerify, sendEmail, setPassword } from "../../api/auth.api";
-import type { HTTPError } from "ky";
+import { isAxiosError } from "axios";
 
 const PasswordChange = () => {
   const [isPassword, setIsPassword] = useState<boolean>(true);
@@ -23,12 +23,15 @@ const PasswordChange = () => {
       console.log(otp);
       setStep(2);
     },
-    onError: async (error: HTTPError) => {
-      const status = await error.response.status;
-      const errorData = await error.response.json();
-      setStatusCode(status);
-      console.log(errorData);
-      console.log(statusCode);
+    onError: (error: unknown) => {
+      if (isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const errorData = error.response.data;
+        setStatusCode(status);
+        console.log(errorData);
+      } else {
+        console.log(error);
+      }
     },
   });
   const otpMutation = useMutation({
@@ -37,12 +40,15 @@ const PasswordChange = () => {
       console.log(data);
       setStep(3);
     },
-    onError: async (error: HTTPError) => {
-      const status = await error.response.status;
-      const errorData = await error.response.json();
-      setStatusCode(status);
-      console.log(errorData);
-      console.log(statusCode);
+    onError: (error: unknown) => {
+      if (isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const errorData = error.response.data;
+        setStatusCode(status);
+        console.log(errorData);
+      } else {
+        console.log(error);
+      }
     },
   });
   const PaaawordMutation = useMutation({
@@ -51,12 +57,15 @@ const PasswordChange = () => {
       console.log(data);
       navigate("/");
     },
-    onError: async (error: HTTPError) => {
-      const status = await error.response.status;
-      const errorData = await error.response.json();
-      setStatusCode(status);
-      console.log("Login failed:", errorData);
-      console.log(statusCode);
+    onError: (error: unknown) => {
+      if (isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const errorData = error.response.data;
+        setStatusCode(status);
+        console.log("Password reset failed:", errorData);
+      } else {
+        console.log("Password reset failed:", error);
+      }
     },
   });
 

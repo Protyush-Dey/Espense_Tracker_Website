@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { LoginPayload } from "../../types/authType";
 import { login } from "../../api/auth.api";
-import type { HTTPError } from "ky";
+import { isAxiosError } from "axios";
 
 const LoginPage = () => {
   const [isPassword, setIsPassword] = useState<boolean>(true);
@@ -23,12 +23,15 @@ const LoginPage = () => {
       console.log(data);
       queryClient.invalidateQueries({ queryKey: ["me"] });
     },
-    onError: async (error: HTTPError) => {
-      const status = await error.response.status;
-      const errorData = await error.response.json();
-      setStatusCode(status);
-      console.log("Login failed:", errorData);
-      console.log(statusCode);
+    onError: (error: unknown) => {
+      if (isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const errorData = error.response.data;
+        setStatusCode(status);
+        console.log("Login failed:", errorData);
+      } else {
+        console.log("Login failed:", error);
+      }
     },
   });
 
