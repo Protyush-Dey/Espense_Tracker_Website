@@ -10,6 +10,7 @@ export const login = async (Data: LoginPayload) => {
 };
 
 // signup
+
 export const signup = async (Data: SignUpPayload) => {
     const response = await api.post<ApiType<any>>("/expTrack/user/ragister", Data);
     return response.data;
@@ -44,3 +45,4 @@ export const setPassword = async (Data: { password: string }) => {
     const response = await api.post<ApiType<any>>("/expTrack/user/updatePassword", Data);
     return response.data;
 };
+
